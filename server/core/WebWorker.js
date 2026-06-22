@@ -19,6 +19,11 @@ const utils = require('./utils');
 const genreTree = require('./genres');
 const Fb2Helper = require('./fb2/Fb2Helper');
 
+// 7z read and covers
+const seven7z = require("node-7z");
+const extractZipCoverAndConvert = require("./CoverJXLConvert");
+const Fb2AppendImages = require("./Fb2AppendImages");
+
 //server states
 const ssNormal = 'normal';
 const ssDbLoading = 'db_loading';
@@ -406,21 +411,35 @@ class WebWorker {
             
             await fs.copy(fullPath, outFile);
             return outFile;
-        } else {// файл в zip-архиве
+        } else {
+          // файл в zip-архиве
+          if (await fs.pathExists(folder)) {
+            // файл в zip-архиве
             const zipReader = new ZipReader();
             await zipReader.open(folder);
 
             try {
-                await zipReader.extractToFile(file, outFile);
+              await zipReader.extractToFile(file, outFile);
 
-                if (!await fs.pathExists(outFile)) {//не удалось найти в архиве, попробуем имя файла в кодировке cp866
-                    await zipReader.extractToFile(iconv.encode(file, 'cp866').toString(), outFile);                    
-                }
+              if (!(await fs.pathExists(outFile))) {
+                //не удалось найти в архиве, попробуем имя файла в кодировке cp866
+                await zipReader.extractToFile(
+                  iconv.encode(file, "cp866").toString(),
+                  outFile,
+                );
+              }
 
-                return outFile;
+              return outFile;
             } finally {
-                await zipReader.close();
+              await zipReader.close();
             }
+          } else {
+            const folder7z = folder.replace(".zip", ".7z");
+            if (await fs.pathExists(folder7z)) {
+              await Fb2AppendImages(this.config, libFolder, file, outFile);
+              return outFile;
+            }
+          }
         }
     }
 
@@ -568,6 +587,12 @@ class WebWorker {
                     if (cover) {
                         result.cover = `${this.config.bookPathStatic}/${hash}${coverExt}`;
                         await fs.writeFile(`${bookFile}${coverExt}`, cover);
+                    } else {
+                        const {libFolder, libFile} = bookInfo
+                        const jxlcover = await extractZipCoverAndConvert(this.config, hash, libFolder, libFile.slice(0,-4), ".png")
+                        if(jxlcover){
+                            result.cover = jxlcover
+                        }
                     }
                 }
 
