@@ -57,10 +57,10 @@
                                 </DivBtn>
                             </div>
                         </div>
-                        <div v-show="!isExtendedSearch" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
+                        <div v-show="!isExtendedSearch" class="row q-mx-sm q-mb-xs items-center">
                             <q-input
                                 ref="authorInput" v-model="search.author" :maxlength="5000" :debounce="inputDebounce"
-                                class="q-mt-xs col-3" :bg-color="inputBgColor('author')" style="min-width: 140px" label="Автор" stack-label outlined dense clearable
+                                class="q-mt-xs col" :bg-color="inputBgColor('author')" style="min-width: 140px" label="Автор" stack-label outlined dense clearable
                             >
                                 <q-tooltip v-if="search.author" :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
                                     {{ search.author }}
@@ -68,34 +68,11 @@
                             </q-input>
                             <div class="q-mx-xs" />
                             <q-input
-                                v-model="search.series" :maxlength="inputMaxLength" :debounce="inputDebounce"
-                                class="q-mt-xs col-3" :bg-color="inputBgColor('series')" style="min-width: 140px" label="Серия" stack-label outlined dense clearable
-                            >
-                                <q-tooltip v-if="search.series" :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                    {{ search.series }}
-                                </q-tooltip>
-                            </q-input>
-                            <div class="q-mx-xs" />
-                            <q-input
                                 v-model="search.title" :maxlength="inputMaxLength" :debounce="inputDebounce"
-                                class="q-mt-xs col-3" :bg-color="inputBgColor('title')" style="min-width: 140px;" label="Название" stack-label outlined dense clearable
+                                class="q-mt-xs col" :bg-color="inputBgColor('title')" style="min-width: 140px;" label="Название" stack-label outlined dense clearable
                             >
                                 <q-tooltip v-if="search.title" :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
                                     {{ search.title }}
-                                </q-tooltip>
-                            </q-input>
-                            <div class="q-mx-xs" />
-                            <q-input
-                                v-model="search.lang" :maxlength="inputMaxLength" :debounce="inputDebounce"
-                                class="q-mt-xs col-1" :bg-color="inputBgColor()" input-style="cursor: pointer" style="min-width: 90px;" label="Язык" stack-label outlined dense clearable readonly
-                                @click.stop.prevent="selectLang"
-                            >
-                                <template v-if="search.lang" #append>
-                                    <q-icon name="la la-times-circle" class="q-field__focusable-action" @click.stop.prevent="search.lang = ''" />
-                                </template>
-
-                                <q-tooltip v-if="search.lang && showTooltips" :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                    {{ search.lang }}
                                 </q-tooltip>
                             </q-input>
                             <div class="q-mx-xs" />
@@ -112,6 +89,28 @@
                             </DivBtn>
                         </div>
                         <div v-show="!isExtendedSearch && extendedParams" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
+                            <q-input
+                                v-model="search.series" :maxlength="inputMaxLength" :debounce="inputDebounce"
+                                class="q-mt-xs col-3" :bg-color="inputBgColor('series')" style="min-width: 140px" label="Серия" stack-label outlined dense clearable
+                            >
+                                <q-tooltip v-if="search.series" :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
+                                    {{ search.series }}
+                                </q-tooltip>
+                            </q-input>
+                            <div class="q-mx-xs" />
+                            <q-input
+                                v-model="search.lang" :maxlength="inputMaxLength" :debounce="inputDebounce"
+                                class="q-mt-xs col-1" :bg-color="inputBgColor()" input-style="cursor: pointer" style="min-width: 90px;" label="Язык" stack-label outlined dense clearable readonly
+                                @click.stop.prevent="selectLang"
+                            >
+                                <template v-if="search.lang" #append>
+                                    <q-icon name="la la-times-circle" class="q-field__focusable-action" @click.stop.prevent="search.lang = ''" />
+                                </template>
+                                <q-tooltip v-if="search.lang && showTooltips" :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
+                                    {{ search.lang }}
+                                </q-tooltip>
+                            </q-input>
+                            <div class="q-mx-xs" />
                             <q-input
                                 v-model="genreNames" :maxlength="inputMaxLength" :debounce="inputDebounce"
                                 class="q-mt-xs col-3" :bg-color="inputBgColor()" input-style="cursor: pointer" style="min-width: 140px;" label="Жанр" stack-label outlined dense clearable readonly
@@ -186,9 +185,6 @@
                                     {{ search.ext }}
                                 </q-tooltip>
                             </q-input>                            
-                        </div>
-                        <div v-show="!isExtendedSearch && !extendedParams && extendedParamsMessage" class="row q-mx-sm items-center clickable" @click.stop.prevent="extendedParams = true">
-                            +{{ extendedParamsMessage }}
                         </div>
 
                         <div v-show="isExtendedSearch" class="row q-mx-md q-mb-xs items-center">
@@ -722,6 +718,8 @@ class Search {
     get extendedParamsMessage() {
         const s = this.search;
         const result = [];
+        result.push(s.series ? 'Серия' : '');
+        result.push(s.lang ? 'Язык' : '');
         result.push(s.genre ? 'Жанр' : '');
         result.push(s.date ? 'Дата поступления' : '');
         result.push(s.librate ? 'Оценка' : '');
@@ -834,37 +832,27 @@ class Search {
     Для раздела <b>Авторы</b>, работу поискового движка можно описать простой фразой: найти авторов по указанным критериям.
     По тем же критериям среди найденных авторов фильтруются книги, сортируются и группируются по сериям.
     <br><br>
-    По умолчанию поисковое значение трактуется как "начинается с". Например значение автора "Пушкин"
-    трактуется как: найти авторов, имя которых начинается с "Пушкин". Поиск всегда ведется без
-    учета регистра - значения "Ельцин" и "ельцин" равнозначны.
+    По умолчанию выполняется поиск подстроки: значение "Пушкин" в поле автора найдёт всех авторов,
+    имя которых содержит "Пушкин". Поиск всегда ведётся без учёта регистра — "Ельцин" и "ельцин" равнозначны.
     <br><br>
-    В поисковых полях "Автор", "Серия", "Название" также доступны следующие префиксы:
+    В поисковых полях "Автор", "Серия", "Название" доступны префиксы для изменения режима поиска:
     <ul>
         <li>
-            "=" поиск по точному совпадению. Например, если задать "=Пушкин Александр Сергеевич" в поле автора,
-            то будет найден в точности этот автор
+            "=" поиск по точному совпадению. Например, "=Пушкин Александр Сергеевич" найдёт в точности этого автора
         </li>
         <br>
         <li>
-            "*" поиск подстроки в строке. Например, для "*Александр" в поле автора, будут найдены
-            все авторы, имя которых содержит "Александр"
+            "#" поиск подстроки, но только среди значений, которые не начинаются с русской или латинской буквы.
+            Например, "#поворот" в поле автора найдёт авторов, имя которых начинается не с буквы алфавита и содержит "поворот"
         </li>
         <br>
         <li>
-            "#" поиск подстроки в строке, но только для тех значений, которые не начинаются ни с одной буквы русского или латинского алфавита.
-            Например, значение "#поворот" в поле автора означает: найти всех авторов, имя которых начинается не с русской или латинской буквы и содержит слово "поворот".
-            Указание простого "#" в поиске по названию означает: найти всех авторов, названия книг которых начинаются не с русской или латинской буквы
+            "~" поиск по регулярному выражению. Например, "~^\\s" в поле названия найдёт
+            все книги, названия которых начинаются с пробела
         </li>
         <br>
         <li>
-            "~" поиск по регулярному выражению. Например, для "~^\\s" в поле названия, будут найдены
-            все книги, названия которых начинаются с пробельного символа
-        </li>
-        <br>
-        <li>
-            "?" поиск пустых значений или тех, что начинаются с этого символа. Например, "?" в поле серии означает: найти всех авторов, у которых есть книги без серий
-            или название серии начинается с "?".
-            Значение "?" в поле названия означает: найти всех авторов, книги которых без названия или начинаются с "?"
+            "?" поиск пустых значений. Например, "?" в поле серии найдёт авторов, у которых есть книги без серий
         </li>
     </ul>
     <br>
