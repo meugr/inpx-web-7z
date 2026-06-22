@@ -1,0 +1,10 @@
+services:
+  inpx-web-7z:
+    build: .
+    image: inpx-web-7z
+    container_name: inpx-web-7z
+    restart: unless-stopped
+    ports:
+      - 12380:12380
+    volumes:
+      - /path/to/library:/library:ro
