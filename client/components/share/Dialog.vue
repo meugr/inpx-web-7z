@@ -6,7 +6,7 @@
                     <slot name="header"></slot>
                 </div>
                 <div class="close-icon column justify-center items-center">
-                    <q-btn v-close-popup flat round dense>
+                    <q-btn flat round dense @click="active = false">
                         <q-icon name="la la-times" size="18px"></q-icon>
                     </q-btn>
                 </div>

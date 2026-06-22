@@ -10,7 +10,7 @@
                     <div v-html="caption"></div>
                 </div>
                 <div class="close-icon column justify-center items-center">
-                    <q-btn v-close-popup flat round dense>
+                    <q-btn flat round dense @click="$refs.dialog.hide()">
                         <q-icon name="la la-times" size="18px"></q-icon>
                     </q-btn>
                 </div>
@@ -35,7 +35,7 @@
                     <div v-html="caption"></div>
                 </div>
                 <div class="close-icon column justify-center items-center">
-                    <q-btn v-close-popup flat round dense>
+                    <q-btn flat round dense @click="$refs.dialog.hide()">
                         <q-icon name="la la-times" size="18px"></q-icon>
                     </q-btn>
                 </div>
@@ -46,7 +46,7 @@
             </div>
 
             <div class="buttons row justify-end q-pa-md">
-                <q-btn v-close-popup class="q-px-md q-ml-sm" dense no-caps>
+                <q-btn class="q-px-md q-ml-sm" dense no-caps @click="$refs.dialog.hide()">
                     Отмена
                 </q-btn>
                 <q-btn class="q-px-md q-ml-sm" color="primary" dense no-caps @click="okClick">
@@ -63,7 +63,7 @@
                     <div v-html="caption"></div>
                 </div>
                 <div v-if="!noCancel" class="close-icon column justify-center items-center">
-                    <q-btn v-close-popup flat round dense>
+                    <q-btn flat round dense @click="$refs.dialog.hide()">
                         <q-icon name="la la-times" size="18px"></q-icon>
                     </q-btn>
                 </div>
@@ -95,7 +95,7 @@
                     <div v-html="caption"></div>
                 </div>
                 <div v-if="!noCancel" class="close-icon column justify-center items-center">
-                    <q-btn v-close-popup flat round dense>
+                    <q-btn flat round dense @click="$refs.dialog.hide()">
                         <q-icon name="la la-times" size="18px"></q-icon>
                     </q-btn>
                 </div>
@@ -128,7 +128,7 @@
                     <div v-html="caption"></div>
                 </div>
                 <div class="close-icon column justify-center items-center">
-                    <q-btn v-close-popup flat round dense>
+                    <q-btn flat round dense @click="$refs.dialog.hide()">
                         <q-icon name="la la-times" size="18px"></q-icon>
                     </q-btn>
                 </div>
@@ -145,7 +145,7 @@
             </div>
 
             <div class="buttons row justify-end q-pa-md">
-                <q-btn v-close-popup class="q-px-md q-ml-sm" dense no-caps>
+                <q-btn class="q-px-md q-ml-sm" dense no-caps @click="$refs.dialog.hide()">
                     Отмена
                 </q-btn>
                 <q-btn class="q-px-md q-ml-sm" color="primary" dense no-caps :disabled="hotKeyCode == ''" @click="okClick">

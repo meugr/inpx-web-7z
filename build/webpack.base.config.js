@@ -25,13 +25,15 @@ module.exports = {
                 loader: 'vue-loader',
             },
             {
-                test: /\.js$/,
+                test: /\.m?js$/,
                 loader: 'babel-loader',
-                exclude: /node_modules/,
+                exclude: /node_modules\/(?!(quasar|@quasar|vue|@vue))/,
                 options: {
                     presets: [['@babel/preset-env', { targets: { esmodules: true } }]],
                     plugins: [
-                        ['@babel/plugin-proposal-decorators', { legacy: true }]
+                        ['@babel/plugin-proposal-decorators', { legacy: true }],
+                        '@babel/plugin-transform-optional-chaining',
+                        '@babel/plugin-transform-nullish-coalescing-operator'
                     ]
                 }
             },
