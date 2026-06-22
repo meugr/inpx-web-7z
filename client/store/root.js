@@ -22,7 +22,8 @@ const state = {
         langDefault: '',
         showJson: false,
         showNewReleaseAvailable: true,
-    },    
+        einkMode: false,
+    },
 };
 
 // getters

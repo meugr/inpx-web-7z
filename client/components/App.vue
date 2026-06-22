@@ -55,6 +55,14 @@ class App {
         }
 
         this.$root.isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+
+        this.$watch(
+            () => this.$store.state.settings.einkMode,
+            (einkMode) => {
+                document.documentElement.classList.toggle('eink', einkMode);
+            },
+            { immediate: true }
+        );
         this.$root.setAppTitle = this.setAppTitle;
 
         //global keyHooks
@@ -161,4 +169,120 @@ body, html, #app {
     font-weight: bold;
     src: url('fonts/web-default-bold.ttf') format('truetype');
 }
+
+/* ===================== E-INK MODE ===================== */
+
+/* Отключаем анимации и переходы */
+html.eink *,
+html.eink *::before,
+html.eink *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
+html.eink .q-ripple,
+html.eink .q-focus-helper {
+    display: none !important;
+}
+
+/* Базовый шрифт крупнее */
+html.eink body,
+html.eink html,
+html.eink #app {
+    font-size: 18px;
+}
+
+/* Убираем все Quasar цвета — только чёрный/белый */
+html.eink [class*="bg-"] {
+    background: #fff !important;
+}
+
+html.eink [class*="text-"] {
+    color: #000 !important;
+}
+
+/* Toolbar — плоский светло-серый вместо голубого */
+html.eink .tool-panel {
+    background: #e8e8e8 !important;
+    border-bottom: 2px solid #888;
+}
+
+/* Поля ввода — крупнее */
+html.eink .q-field__control {
+    min-height: 48px !important;
+}
+
+html.eink .q-field__label {
+    font-size: 15px !important;
+}
+
+/* Кнопки Quasar — крупный тап-зон */
+html.eink .q-btn {
+    min-height: 48px !important;
+    min-width: 48px !important;
+    font-size: 16px !important;
+    border: 1px solid #aaa !important;
+}
+
+/* Toggle-кнопки (Авторы/Серии/Названия) */
+html.eink .q-btn-toggle .q-btn {
+    min-height: 44px !important;
+}
+
+/* Чекбоксы в настройках */
+html.eink .q-checkbox__inner {
+    font-size: 44px !important;
+}
+
+/* Строки списков — чётные с серым фоном */
+html.eink .odd-item {
+    background: #d8d8d8 !important;
+}
+
+/* Разделитель между строками */
+html.eink .odd-item,
+html.eink .column:has(> .book-row) {
+    border-bottom: 1px solid #aaa;
+}
+
+/* Автор/серия — кликабельное: больший тап-зон */
+html.eink .clickable2 {
+    color: #000 !important;
+    padding: 6px 4px !important;
+    display: inline-block;
+}
+
+/* Кнопки действий (скачать, инфо, читать) — как кнопки */
+html.eink .clickable {
+    color: #000 !important;
+    border: 1px solid #666 !important;
+    border-radius: 4px !important;
+    padding: 3px 8px !important;
+    display: inline-block !important;
+    margin: 2px 1px !important;
+    background: #f4f4f4 !important;
+    font-size: 14px !important;
+}
+
+/* Строки книг — больший вертикальный отступ */
+html.eink .q-my-sm {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+}
+
+/* Пагинация — заметнее */
+html.eink .q-ml-md.q-my-xs {
+    font-size: 130% !important;
+    padding: 4px 0 !important;
+}
+
+/* Диалоги на весь экран в portrait */
+@media (max-width: 800px) {
+    html.eink .q-dialog__inner--minimized > div {
+        max-width: 100% !important;
+        width: 100%;
+    }
+}
+
+/* ===================================================== */
 </style>
